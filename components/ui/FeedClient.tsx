@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import RequestCard from "@/components/ui/RequestCard";
+import type { HelpCategory } from "@/types";
 
 /* ── Serializable request shape coming from the server component ── */
 export interface FeedRequest {
@@ -276,7 +277,7 @@ export default function FeedClient({ requests }: FeedClientProps) {
                 id: request.id,
                 title: request.title,
                 description: request.description,
-                category: (request.category || "OTHER").toLowerCase() as any,
+                category: (request.category || "OTHER").toLowerCase() as HelpCategory,
                 type: request.type === "IN_PERSON" ? "in-person" : "remote",
                 author: {
                   id: request.author.id,

@@ -172,7 +172,7 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
     className,
     theme: themeProp,
     styles,
-    projection,
+    projection: _projection,
     viewport,
     onViewportChange,
     loading = false,
