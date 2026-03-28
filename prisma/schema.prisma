@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum Role {
+  SEEKER
+  VOLUNTEER
+}
+
+enum HelpType {
+  IN_PERSON
+  REMOTE
+}
+
+enum RequestStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model User {
+  id          String   @id @default(uuid())
+  phoneNumber String?  @unique
+  email       String?  @unique
+  password    String?
+  name        String
+  role        Role     @default(SEEKER)
+  avatarUrl   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  requests      HelpRequest[]  @relation("AuthorRequests")
+  assignedTasks HelpRequest[]  @relation("AssignedVolunteer")
+  sentMessages  Message[]      @relation("SentMessages")
+  notifications Notification[]
+}
+
+model HelpRequest {
+  id          String        @id @default(uuid())
+  title       String
+  description String        @db.Text
+  type        HelpType      @default(IN_PERSON)
+  status      RequestStatus @default(OPEN)
+
+  latitude  Float?
+  longitude Float?
+  address   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId String
+  author   User   @relation("AuthorRequests", fields: [authorId], references: [id])
+
+  volunteerId String?
+  volunteer   User?   @relation("AssignedVolunteer", fields: [volunteerId], references: [id])
+
+  messages Message[]
+
+  @@index([authorId])
+  @@index([volunteerId])
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+
+  senderId  String
+  sender    User        @relation("SentMessages", fields: [senderId], references: [id])
+  requestId String
+  request   HelpRequest @relation(fields: [requestId], references: [id])
+
+  @@index([senderId])
+  @@index([requestId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
