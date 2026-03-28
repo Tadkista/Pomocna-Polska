@@ -1,6 +1,11 @@
 import { PrismaClient } from "@prisma/client";
+import { createHash } from "crypto";
 
 const prisma = new PrismaClient();
+
+function hashPassword(password: string): string {
+  return createHash("sha256").update(password).digest("hex");
+}
 
 async function main() {
   // Clean up existing data (order matters for foreign keys)
@@ -15,6 +20,7 @@ async function main() {
       id: "u1",
       name: "Anna Kowalska",
       phoneNumber: "+48600100100",
+      password: hashPassword("Haslo123"),
       email: "anna.kowalska@example.com",
       role: "VOLUNTEER",
       avatarUrl: "https://ui-avatars.com/api/?name=Anna+Kowalska&background=random",
@@ -26,6 +32,7 @@ async function main() {
       id: "u3",
       name: "Pani Maria",
       phoneNumber: "+48600300300",
+      password: hashPassword("Haslo123"),
       email: "maria@example.com",
       role: "SEEKER",
       avatarUrl: "https://ui-avatars.com/api/?name=Pani+Maria&background=random",
@@ -37,6 +44,7 @@ async function main() {
       id: "u2",
       name: "Pani Halina",
       phoneNumber: "+48600200200",
+      password: hashPassword("Haslo123"),
       email: "halina@example.com",
       role: "SEEKER",
       avatarUrl: null,
@@ -48,6 +56,7 @@ async function main() {
       id: "u4",
       name: "Pan Janusz",
       phoneNumber: "+48600400400",
+      password: hashPassword("Haslo123"),
       email: "janusz@example.com",
       role: "VOLUNTEER",
       avatarUrl: null,
