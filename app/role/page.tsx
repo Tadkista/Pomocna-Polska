@@ -53,7 +53,7 @@ function RoleSelectionContent() {
           setLoading(false);
           alert("Wystąpił błąd podczas zmiany roli.");
         }
-      } catch (err) {
+      } catch (_err) {
         setLoading(false);
         alert("Błąd sieci.");
       }
