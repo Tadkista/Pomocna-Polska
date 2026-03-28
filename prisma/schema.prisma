@@ -28,6 +28,14 @@ enum RequestStatus {
   CANCELLED
 }
 
+enum HelpCategory {
+  SHOPPING
+  MEDICINE
+  TRANSPORT
+  COMPANIONSHIP
+  OTHER
+}
+
 // ─── Models ───────────────────────────────────────────────────────────────────
 
 model User {
@@ -52,6 +60,7 @@ model HelpRequest {
   title       String
   description String        @db.Text
   type        HelpType      @default(IN_PERSON)
+  category    HelpCategory  @default(OTHER)
   status      RequestStatus @default(OPEN)
 
   latitude  Float?
