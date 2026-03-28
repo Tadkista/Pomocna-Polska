@@ -1,4 +1,7 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import BottomNav from "@/components/layout/BottomNav";
+import { canViewFeed } from "@/lib/permissions";
 import FeedClient from "@/components/ui/FeedClient";
 import type { FeedRequest } from "@/components/ui/FeedClient";
 import { prisma } from "@/lib/db";
@@ -6,6 +9,14 @@ import { prisma } from "@/lib/db";
 export const dynamic = "force-dynamic";
 
 export default async function FeedPage() {
+  const cookieStore = await cookies();
+  const role = cookieStore.get("user_role")?.value;
+
+  if (!canViewFeed(role)) {
+    // SEEKER cannot view other people's requests
+    redirect("/no-access?reason=feed");
+  }
+
   const raw = await prisma.helpRequest.findMany({
     where: { status: "OPEN" },
     orderBy: { createdAt: "desc" },
@@ -38,8 +49,7 @@ export default async function FeedPage() {
       <div
         className="fixed inset-0 pointer-events-none -z-10"
         style={{
-          backgroundImage:
-            "radial-gradient(circle at 2px 2px, #e2beba 1px, transparent 0)",
+          backgroundImage: "radial-gradient(circle at 2px 2px, #e2beba 1px, transparent 0)",
           backgroundSize: "24px 24px",
           opacity: 0.1,
         }}
@@ -48,12 +58,8 @@ export default async function FeedPage() {
       {/* Header */}
       <header className="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-[#FBFBE2] shadow-sm max-w-[390px] md:max-w-full">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[#8F000D]">
-            volunteer_activism
-          </span>
-          <h1 className="font-headline font-extrabold text-xl text-[#8F000D] tracking-tight">
-            Pomocna Polska
-          </h1>
+          <span className="material-symbols-outlined text-[#8F000D]">volunteer_activism</span>
+          <h1 className="font-headline font-extrabold text-xl text-[#8F000D] tracking-tight">Pomocna Polska</h1>
         </div>
         <div className="flex items-center gap-4">
           <button className="material-symbols-outlined text-[#1B1D0E] hover:bg-[#F5F5DC] p-2 rounded-full transition-colors active:scale-95 duration-150">
@@ -66,7 +72,7 @@ export default async function FeedPage() {
         <FeedClient requests={requests} />
       </main>
 
-      <BottomNav />
+      <BottomNav role={role} />
     </div>
   );
 }
