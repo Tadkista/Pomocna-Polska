@@ -1,0 +1,30 @@
+﻿Need to install the following packages:
+prisma@6.19.2
+Ok to proceed? (y) 
+node.exe : Environment var
+iables loaded from .env
+At C:\Program Files\nodejs
+\npx.ps1:29 char:3
++   & $NODE_EXE $NPX_CLI_J
+S $args
++   ~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~
+    + CategoryInfo        
+      : NotSpeci    fied: 
+(Environmen    t variables
+ loade    d from .env:Stri
+n    g) [], RemoteExce    
+ption
+    + FullyQualifiedE    r
+rorId : NativeCo    mmandE
+rror
+ 
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": MySQL database "pp" at "gateway01.eu-central-1.prod.aws.tidbcloud.com:4000"
+
+ÔÜá´ŞĆ  There might be data loss when applying the changes:
+
+  ÔÇó The values [BOTH] on the enum `User_role` will be removed. If these variants are still used in the database, this will fail.
+
+
+
